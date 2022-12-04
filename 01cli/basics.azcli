@@ -1,0 +1,65 @@
+#####################################################################
+# Azure CLI - The Basics
+#####################################################################
+
+# check to see if it is installed and view to see the version
+az --version
+
+# login
+az login
+
+# show subscription
+az account show
+
+
+#####################################################################
+# Getting Help
+#####################################################################
+
+az -h
+
+az group -h
+
+az group create -h
+
+#####################################################################
+# Format the output
+#####################################################################
+
+# default JSON output
+az group list
+
+# table output
+az group list -o table
+
+# tsv output
+az group list -o tsv
+
+# color json!
+az group list -o jsonc
+
+#####################################################################
+# Using queries:  JMESPath query string. See http://jmespath.org/
+#####################################################################
+
+az group show -n test1
+
+az group show -n test1 --query location
+
+az group show -n test1 --query [name,location]
+
+az group show -n test1 --query properties.provisioningState
+
+az group show -n test1 --query {Name:name,Region:location}
+
+az account list-locations
+
+az account list-locations --query [].name
+
+az account list-locations --query [21].name
+
+az account list-locations --query [21].name -o tsv
+
+$location = az account list-locations --query [21].name -o tsv
+$location
+

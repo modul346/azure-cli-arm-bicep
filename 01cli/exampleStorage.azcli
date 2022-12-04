@@ -1,0 +1,49 @@
+#####################################################################
+# Azure CLI - Example Working with a Storage Account
+#####################################################################
+
+$rGroup="Modul346Storage"
+$location="switzerlandnorth"
+$stAccount="teststorage55555778"
+
+#####################################################################
+# Creating the Resource Group
+#####################################################################
+
+az group create  -n $rGroup  -l $location 
+
+#####################################################################
+# Creating the Storage Account
+#####################################################################
+
+az storage account create --name $stAccount -g $rGroup --location $location --sku Standard_LRS
+
+# Get the connection string
+az storage account show-connection-string -n $stAccount -g $rGroup --query connectionString -o tsv
+
+$connectionString = az storage account show-connection-string -n $stAccount -g $rGroup --query connectionString -o tsv
+
+$connectionString
+
+
+# Creating a BLOB storage container
+
+az storage container create -h
+
+az storage container create -n "public" --public-access blob --connection-string $connectionString
+
+# save our connection string into an environment variable to save us passing it to every commmand
+$env:AZURE_STORAGE_CONNECTION_STRING = $connectionString
+
+# upload the demo file to the container
+az storage blob upload -c "public" -f "testfile.txt" -n "test.txt"
+
+# get the URL of the blob
+az storage blob url -c "public" -n "test.txt" -o tsv
+
+#####################################################################
+# CleanUp to avoid costs
+#####################################################################
+
+az group delete -n $rGroup --yes
+

@@ -1,0 +1,38 @@
+#####################################################################
+# Deployment with Bicep
+# Bicep is domain specific language to transpile .bicep files into
+# ARM-templates (.json)
+#####################################################################
+
+# Examples of working templates can be found at: https://github.com/Azure/AzureStack-QuickStart-Templates
+#                                                https://github.com/Azure/azure-quickstart-templates
+
+az group list -o table
+
+$rg="testdeploy"
+$loc="switzerlandnorth"
+
+# Create a new resource group
+az group create -n $rg -l $loc
+
+az bicep -h
+
+az bicep decompile -f atest.json
+
+az deployment group create -g $rg -f atest.bicep
+
+az deployment group create -g $rg -f atest.bicep -p name=wufffi33
+
+az deployment group create -g $rg -f atest.bicep -p parameter.json
+
+# working with a more complex example
+
+az bicep decompile -f storagedeploy.json
+
+az bicep generate-params -f storagedeploy.bicep
+
+
+#clean up at the end
+az group delete --name $rg --yes
+
+

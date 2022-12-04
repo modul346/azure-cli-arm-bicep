@@ -1,0 +1,53 @@
+#####################################################################
+# Azure CLI - Working with VMs
+#####################################################################
+
+# see the VM sub-options
+az vm -h
+
+# show the most commonly used ones
+az vm image list -o table
+
+
+$location="switzerlandnorth"
+
+az vm list-sizes --location $location -o table
+
+#####################################################################
+# Creating the RG and then the VM
+#####################################################################
+
+$rGroup="Modul346Vm"
+$vmName="TestVM"
+$password="AzureNoFog111!"
+
+az group create -n $rGroup -l $location
+
+az vm create --resource-group $rGroup --name $vmName --image Win2022Datacenter --admin-username ms --admin-password $password
+
+az resource list -g $rGroup -o table
+
+# see what size VM it created for us
+az vm show -g $rGroup -n $vmName --query "hardwareProfile.vmSize"
+
+# what is the public ip of our vm
+az vm list-ip-addresses -n $vmName -g $rGroup -o table
+
+#####################################################################
+# Start and Stop the the VM 
+#####################################################################
+
+# see what state it is in - it's running
+az vm show -d -g $rGroup -n $vmName --query "powerState" -o tsv
+
+# stop and deallocate so we no longer pay for resources
+az vm deallocate -n $vmName -g $rGroup
+
+# check its stopped
+az vm show -d -g $rGroup -n $vmName --query "powerState" -o tsv
+
+# lets start it back up again
+az vm start -n $vmName -g $rGroup
+
+# delete the whole resource group
+az group delete --name $rGroup --yes

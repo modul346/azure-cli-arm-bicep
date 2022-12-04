@@ -1,0 +1,27 @@
+#####################################################################
+# Deployment with ARM-Templates
+#####################################################################
+
+# Examples of working templates can be found at: https://github.com/Azure/AzureStack-QuickStart-Templates
+#                                                https://github.com/Azure/azure-quickstart-templates
+
+az group list -o table
+
+$rg="testdeploy"
+$loc="switzerlandnorth"
+
+# Create a new resource group
+az group create -n $rg -l $loc
+
+az deployment group create -g $rg -f atest.json
+
+az deployment group create -g $rg -f atest.json -p name=wufffi33
+
+az deployment group create -g $rg -f atest.json -p parameter.json
+
+
+#clean up at the end
+az group delete --name $rg --yes
+
+
+
